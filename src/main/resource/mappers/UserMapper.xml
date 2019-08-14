@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ccsu.bookshop.dao.UserDao">
+
+    <select id="selectByUserId" parameterType="integer" resultType="com.ccsu.bookshop.bean.User">
+        select * from user where  id=#{userId}
+    </select>
+
+
+    <select id="selectByUsername" parameterType="string" resultType="com.ccsu.bookshop.bean.User">
+        select  * from user where username = #{username}
+    </select>
+
+    <insert id="insertUser" parameterType="com.ccsu.bookshop.bean.User">
+        insert into user(username,password,icon) values(#{username},#{password},#{icon})
+    </insert>
+
+
+    <update id="updateImage">
+        update  user  set icon=#{url} where id=#{uid}
+    </update>
+
+</mapper>

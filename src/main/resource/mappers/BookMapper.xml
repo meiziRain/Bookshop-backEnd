@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ccsu.bookshop.dao.BookDao">
+    <!-- List<Book>getBooksByKind(String book_type_big);-->
+    <select id="getBooksByKind" parameterType="String" resultType="com.ccsu.bookshop.bean.Book">
+        select id,title,pic_url,price,book_type_big from books where book_type_big =#{book_type_big}  group by title
+    </select>
+    <select id="selectByNewRecommend" resultType="com.ccsu.bookshop.bean.Book">
+       select id,title,pic_url,price,book_type_big from books where people_num between 5000 and  10000
+    </select>
+
+    <select id="selectByBigKind" resultType="String">
+      select book_type_big from books group by book_type_big
+    </select>
+
+    <select id="selectByBookCar" resultType="com.ccsu.bookshop.bean.Book">
+         select id,title,pic_url,price,score from books
+         where book_type_big in ('主编推荐') and id in('1109','1274','1329','1350','1462','1127','1357','1599','1600','1655')
+    </select>
+
+
+    <!--wen-->
+    <select id="queryBookById" resultType="com.ccsu.bookshop.bean.Book">
+         select  * from books where id=#{id}
+    </select>
+    <select id="queryBookTopTen" resultType="com.ccsu.bookshop.bean.Book">
+         select  *  from books group by  score desc,title  limit 0,10
+    </select>
+    <select id="queryBookByType" resultType="com.ccsu.bookshop.bean.Book">
+         select  *  from books where  book_type=#{bookType}   order by rand() limit 0,10
+    </select>
+
+
+    <!--lyf-->
+
+    <select id="seletByindex" resultType="com.ccsu.bookshop.bean.Book">
+        select  id,title,price,pic_url,score from books where  book_type =#{kind}
+    </select>
+
+
+
+
+    <select id="selectKind" resultType="string">
+    select  book_type from books where book_type_big=#{bookBigType} group by book_type
+    </select>
+
+
+    <select id="selectByLike" parameterType="String"  resultType="com.ccsu.bookshop.bean.Book">
+
+        select * from books
+     <where>
+         <if test="key!=null and key!=''">
+         and (title like "%"#{key}"%"  or book_type like "%"#{key}"%"  or book_type_big like "%"#{key}"%" or author like "%"#{key}"%"
+             or price like  "%"#{key}"%"
+             )
+         </if>
+     </where>
+    </select>
+
+
+
+</mapper>

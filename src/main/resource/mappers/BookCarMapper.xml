@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ccsu.bookshop.dao.BookCarDao">
+
+    <select id="selectBookCarByUserId" parameterType="Integer" resultType="com.ccsu.bookshop.bean.BookCar">
+        select id,title,pic_url,price,number,create_time,book_id from bookcar where user_id=#{userId} and status=1
+    </select>
+    <!-- 有参数就更改为参数值，没有就加1 -->
+    <update id="updateBookCarByNum" parameterType="com.ccsu.bookshop.bean.BookCar">
+        update bookcar
+        <set>
+            <if test="number!=null">number =#{number}</if>
+            <if test="number==null">number =number +1</if>
+        </set>
+        where user_id =#{userId} and book_id=#{bookId} and status=1
+    </update>
+
+    <delete id="deleteBookCarById" parameterType="int[]">
+        delete from bookcar where id in
+        <foreach collection="array" item="arr" index="index" open="(" separator="," close=")">
+            #{arr}
+        </foreach>
+    </delete>
+
+
+    <insert id="insertBookCar" parameterType="com.ccsu.bookshop.bean.BookCar">
+        insert into bookcar(user_id,book_id,title,pic_url,price,book_type_big,create_time)
+        values (#{userId},#{bookId},#{title},#{picUrl},#{price},#{bookTypeBig},#{createTime})
+    </insert>
+
+    <select id="countBookCarByUserId" parameterType="Integer" resultType="Integer">
+        select sum(number) from bookcar where user_id=#{userId} and status=1
+    </select>
+
+    <select id="selectBookCar" parameterType="Integer" resultType="com.ccsu.bookshop.bean.BookCar">
+        select * from bookcar where user_id=#{userId} and book_id=#{bookId} and status=1
+    </select>
+
+    <update id="updateBookCarByStauts" parameterType="int[]">
+        update bookcar set status=0 where id in
+        <foreach collection="array" item="arr" index="index" open="(" separator="," close=")">
+            #{arr}
+        </foreach>
+
+    </update>
+
+    <select id="selectBookCarByPayed" parameterType="Integer" resultType="com.ccsu.bookshop.bean.BookCar">
+        select id,title,price,number,create_time from bookcar where user_id=#{userId} and status=0
+    </select>
+
+
+    <!--wen-->
+    <update id="updateBookCarFromDetail" parameterType="Integer">
+        update bookcar set number= #{buyNum}+number where book_id=#{bookId} and user_id=#{userId}
+    </update>
+
+
+
+    <insert id="insertBookCarFromDetail" parameterType="com.ccsu.bookshop.bean.BookCar">
+        insert into bookcar(user_id,book_id,title,pic_url,price,number,book_type_big,create_time)
+        values (#{userId},#{bookId},#{title},#{picUrl},#{price},#{number},#{bookTypeBig},#{createTime})
+    </insert>
+</mapper>
